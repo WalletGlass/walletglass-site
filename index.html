@@ -4,28 +4,62 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WalletGlass — Because vibes aren’t a trading strategy.</title>
+  <meta name="description" content="WalletGlass shows your real crypto ROI: total USD funded vs current wallet value." />
   <style>
-    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
-           background:#0B0F14; color:#E6F0FF; display:flex; min-height:100vh; }
-    .wrap { margin:auto; text-align:center; padding:24px; max-width:720px; }
-    h1 { font-size:2rem; margin:0 0 12px; }
-    p  { opacity:.85; margin:0 0 24px; line-height:1.6; }
-    .btn { display:inline-block; padding:14px 22px; border-radius:12px; text-decoration:none;
-           background:#4DB6FF; color:#001018; font-weight:600; }
-    .sub { font-size:.9rem; opacity:.7; margin-top:16px; }
+    :root{
+      --bg:#0B0F14; --panel:#111823; --text:#E6F0FF; --muted:#9FB3C8; --brand:#4DB6FF;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; background:var(--bg); color:var(--text);}
+    .wrap{max-width:820px; margin:0 auto; padding:32px 20px; min-height:100vh; display:flex; align-items:center; justify-content:center;}
+    .card{width:100%; background:var(--panel); border-radius:20px; padding:32px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,.25);}
+    img.logo{height:56px; margin-bottom:16px}
+    h1{font-size:clamp(24px,4.5vw,40px); margin:0 0 12px}
+    p.sub{margin:0 0 24px; color:var(--muted); line-height:1.6}
+    .cta-row{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:20px}
+    .btn{appearance:none; border:0; border-radius:12px; padding:14px 20px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-block}
+    .btn-primary{background:var(--brand); color:#001018}
+    .btn-ghost{background:transparent; color:var(--text); outline:1px solid rgba(255,255,255,.15)}
+    form.news{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:6px}
+    input[type="email"]{padding:14px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.15); background:#0b1220; color:var(--text); min-width:260px}
+    input[type="email"]::placeholder{color:#7f93a8}
+    .fine{margin-top:8px; color:#7f93a8; font-size:.85rem}
+    footer{margin-top:18px; color:#7f93a8; font-size:.85rem}
+    .hide{display:none}
   </style>
 </head>
 <body>
   <main class="wrap">
-    <h1>Are you actually up or down?</h1>
-    <p>WalletGlass gives you real ROI by comparing total USD funded vs current wallet value.
-       No dopamine. Just receipts.</p>
-    <a class="btn" href="#" id="openApp">Open the App</a>
-    <div class="sub">Coming soon: token breakdowns & pro insights.</div>
+    <section class="card">
+      <!-- Logo (add logo.png to the repo root or /assets) -->
+      <img class="logo" src="logo.png" alt="WalletGlass" onerror="this.style.display='none'">
+      <h1>Are you actually up or down?</h1>
+      <p class="sub">WalletGlass gives you real ROI by comparing total USD funded vs current wallet value. No dopamine. Just receipts.</p>
+
+      <div class="cta-row">
+        <!-- TODO(1): put your Tally link below -->
+        <a class="btn btn-primary" href="https://tally.so/r/wQZd1Y" target="_blank" rel="noopener">Join Early Access</a>
+        <!-- When the app is live, point this to https://app.walletglass.io -->
+        <a class="btn btn-ghost" href="#" id="openApp">Open the App</a>
+      </div>
+
+      <!-- Email capture (Formspree) -->
+      <!-- TODO(2): replace the action URL with your Formspree endpoint (looks like https://formspree.io/f/xxxxxxx) -->
+      <form class="news" action="https://formspree.io/f/REPLACE_ME" method="POST">
+        <input type="email" name="email" placeholder="your@email.com" required>
+        <input type="text" name="_gotcha" class="hide" tabindex="-1" autocomplete="off"> <!-- honeypot -->
+        <button class="btn btn-primary" type="submit">Get updates</button>
+        <input type="hidden" name="_subject" value="New WalletGlass subscriber">
+      </form>
+
+      <div class="fine">Follow along: <a href="https://twitter.com/walletglassapp" target="_blank" rel="noopener" style="color:var(--brand); text-decoration:none">@walletglassapp</a></div>
+
+      <footer>© <span id="y"></span> WalletGlass</footer>
+    </section>
   </main>
   <script>
-    // Change this later to: https://app.walletglass.io
-    document.getElementById('openApp').href = '#';
+    document.getElementById('y').textContent = new Date().getFullYear();
+    document.getElementById('openApp').href = '#'; // change to https://app.walletglass.io later
   </script>
 </body>
 </html>
