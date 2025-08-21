@@ -56,12 +56,15 @@
       <!-- TODO(2): replace the action URL with your Formspree endpoint (looks like https://formspree.io/f/xxxxxxx) -->
       <form id="wg-news" class="news" action="https://formspree.io/f/xyzpqoar" method="POST">
         <input type="email" name="email" placeholder="your@email.com" required>
-        <input type="text" name="_gotcha" class="hide" tabindex="-1" autocomplete="off"> <!-- honeypot -->
+        <input type="text" name="_gotcha" class="hide" tabindex="-1" autocomplete="off">
+        <input type="hidden" name="source" value="walletglass.io">
         <button class="btn btn-primary" type="submit">Get updates</button>
         <input type="hidden" name="_subject" value="New WalletGlass subscriber">
       </form>
+      
       <p id="wg-news-ok" class="fine" style="display:none;">Thanks! Please check your inbox for confirmation.</p>
       <p id="wg-news-err" class="fine" style="display:none;color:#ffb4b4;">Something went wrong. Try again in a minute.</p>
+
       <div class="fine">Follow along: <a href="https://twitter.com/walletglassapp" target="_blank" rel="noopener" style="color:var(--brand); text-decoration:none">@walletglassapp</a></div>
 
       <footer>© <span id="y"></span> WalletGlass</footer>
@@ -71,70 +74,42 @@
     document.getElementById('y').textContent = new Date().getFullYear();
     document.getElementById('openApp').href = '#'; // change to https://app.walletglass.io later
   </script>
-  <script>
-  (function () {
-    const form = document.getElementById('wg-news');
-    const ok = document.getElementById('wg-news-ok');
-    const err = document.getElementById('wg-news-err');
-    const btn = form.querySelector('button[type="submit"]');
-    if (!form) return;
+<script>
+(function () {
+  const form = document.querySelector('form#wg-news');
+  const ok = document.getElementById('wg-news-ok');
+  const err = document.getElementById('wg-news-err');
+  if (!form) return; // safety
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      ok.style.display = 'none';
-      err.style.display = 'none';
+  const btn = form.querySelector('button[type="submit"]');
 
-      
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();             // <-- stops the default redirect
+    ok.style.display = 'none';
+    err.style.display = 'none';
+    btn.disabled = true; btn.textContent = 'Sending…';
 
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        ok.style.display = 'none';
-        err.style.display = 'none';
-      
-        // 👇 NEW: set sending state
-        btn.disabled = true;
-        btn.textContent = 'Sending…';
-      
-        const data = new FormData(form);
-        try {
-          const res = await fetch(form.action, {
-            method: 'POST',
-            headers: { 'Accept': 'application/json' },
-            body: data
-          });
-          if (res.ok) {
-            form.reset();
-            ok.style.display = 'block';
-          } else {
-            err.style.display = 'block';
-          }
-        } catch {
-          err.style.display = 'block';
-        } finally {
-          // 👇 NEW: restore button
-          btn.disabled = false;
-          btn.textContent = 'Get updates';
-        }
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },  // <-- tells Formspree to NOT redirect
+        body: new FormData(form)
       });
-
-      try {
-        const res = await fetch(form.action, {
-          method: 'POST',
-          headers: { 'Accept': 'application/json' },
-          body: data
-        });
-        if (res.ok) {
-          form.reset();
-          ok.style.display = 'block';
-        } else {
-          err.style.display = 'block';
-        }
-      } catch {
+      if (res.ok) {
+        form.reset();
+        ok.style.display = 'block';
+      } else {
         err.style.display = 'block';
       }
-    });
-  })();
+    } catch {
+      err.style.display = 'block';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Get updates';
+    }
+  });
+})();
 </script>
+
 
 </body>
 </html>
