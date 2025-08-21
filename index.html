@@ -54,7 +54,7 @@
 
       <!-- Email capture (Formspree) -->
       <!-- TODO(2): replace the action URL with your Formspree endpoint (looks like https://formspree.io/f/xxxxxxx) -->
-      <form class="news" action="https://formspree.io/f/xyzpqoar" method="POST">
+      <form id="wg-news" class="news" action="https://formspree.io/f/xyzpqoar" method="POST">
         <input type="email" name="email" placeholder="your@email.com" required>
         <input type="text" name="_gotcha" class="hide" tabindex="-1" autocomplete="off"> <!-- honeypot -->
         <button class="btn btn-primary" type="submit">Get updates</button>
@@ -76,7 +76,7 @@
     const form = document.getElementById('wg-news');
     const ok = document.getElementById('wg-news-ok');
     const err = document.getElementById('wg-news-err');
-
+    const btn = form.querySelector('button[type="submit"]');
     if (!form) return;
 
     form.addEventListener('submit', async (e) => {
@@ -84,7 +84,39 @@
       ok.style.display = 'none';
       err.style.display = 'none';
 
-      const data = new FormData(form);
+      
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        ok.style.display = 'none';
+        err.style.display = 'none';
+      
+        // 👇 NEW: set sending state
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+      
+        const data = new FormData(form);
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' },
+            body: data
+          });
+          if (res.ok) {
+            form.reset();
+            ok.style.display = 'block';
+          } else {
+            err.style.display = 'block';
+          }
+        } catch {
+          err.style.display = 'block';
+        } finally {
+          // 👇 NEW: restore button
+          btn.disabled = false;
+          btn.textContent = 'Get updates';
+        }
+      });
+
       try {
         const res = await fetch(form.action, {
           method: 'POST',
