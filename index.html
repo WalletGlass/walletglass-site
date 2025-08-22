@@ -5,17 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>WalletGlass — Because vibes aren’t a trading strategy.</title>
   <meta name="description" content="WalletGlass shows your real crypto ROI: total USD funded vs current wallet value. No dopamine. Just receipts." />
-
-  <!-- Theme color for mobile browsers -->
   <meta name="theme-color" content="#0B0F14">
 
-  <!-- Favicons (versioned to defeat caches) -->
+  <!-- Favicons (versioned to bust caches). Make sure these files exist at repo root -->
   <link rel="icon" href="/favicon.ico?v=3" sizes="any">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=3">
+  <link rel="icon" type="image/png" sizes="32x32"  href="/favicon.png?v=3">
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png?v=3">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
-  <link rel="manifest" href="/site.webmanifest?v=3">
-
 
   <!-- Open Graph / Facebook / Discord -->
   <meta property="og:type" content="website">
@@ -23,6 +19,7 @@
   <meta property="og:url" content="https://walletglass.io/">
   <meta property="og:title" content="WalletGlass — Are you actually up or down?">
   <meta property="og:description" content="Real ROI: total USD funded vs current wallet value. No dopamine. Just receipts.">
+  <!-- Use the actual filename you uploaded for the OG image (1200x630 recommended) -->
   <meta property="og:image" content="https://walletglass.io/logo.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -34,14 +31,6 @@
   <meta name="twitter:description" content="Real ROI: total USD funded vs current wallet value. No dopamine. Just receipts.">
   <meta name="twitter:image" content="https://walletglass.io/logo.png">
 
-  <!-- Styles follow -->
-  <style>
-    /* your CSS here */
-  </style>
-</head>
-
-
-
   <style>
     :root{
       --bg:#0B0F14; --panel:#111823; --text:#E6F0FF; --muted:#9FB3C8; --brand:#4DB6FF;
@@ -50,14 +39,12 @@
     body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; background:var(--bg); color:var(--text);}
     .wrap{max-width:820px; margin:0 auto; padding:32px 20px; min-height:100vh; display:flex; align-items:center; justify-content:center;}
     .card{width:100%; background:var(--panel); border-radius:20px; padding:32px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,.25);}
-    /* Replace any existing img.logo rules with ONLY this */
-    img.logo {
-      display: block;
-      margin: 16px auto 24px;   /* centers the image block */
-      width: 80%;  /* responsive: min 120px, scale with viewport, hard cap 240px */
-      height: auto;             /* keep proportions */
+    img.logo{
+      display:block;
+      margin:16px auto 24px;
+      width:80%;
+      height:auto;
     }
-
     h1{font-size:clamp(24px,4.5vw,40px); margin:0 0 12px}
     p.sub{margin:0 0 24px; color:var(--muted); line-height:1.6}
     .cta-row{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:20px}
@@ -75,20 +62,15 @@
 <body>
   <main class="wrap">
     <section class="card">
-      <!-- Logo (add logo.png to the repo root or /assets) -->
       <img class="logo" src="logo.png" alt="WalletGlass" onerror="this.style.display='none'">
       <h1>Are you actually up or down?</h1>
       <p class="sub">WalletGlass gives you real ROI by comparing total USD funded vs current wallet value. No dopamine. Just receipts.</p>
 
       <div class="cta-row">
-        <!-- TODO(1): put your Tally link below -->
         <a class="btn btn-primary" href="https://tally.so/r/wQZd1Y" target="_blank" rel="noopener">Join Early Access</a>
-        <!-- When the app is live, point this to https://app.walletglass.io -->
         <a class="btn btn-ghost" href="#" id="openApp">Open the App</a>
       </div>
 
-      <!-- Email capture (Formspree) -->
-      <!-- TODO(2): replace the action URL with your Formspree endpoint (looks like https://formspree.io/f/xxxxxxx) -->
       <form id="wg-news" class="news" action="https://formspree.io/f/xyzpqoar" method="POST">
         <input type="email" name="email" placeholder="your@email.com" required>
         <input type="text" name="_gotcha" class="hide" tabindex="-1" autocomplete="off">
@@ -96,7 +78,7 @@
         <button class="btn btn-primary" type="submit">Get updates</button>
         <input type="hidden" name="_subject" value="New WalletGlass subscriber">
       </form>
-      
+
       <p id="wg-news-ok" class="fine" style="display:none;">Thanks! Please check your inbox for confirmation.</p>
       <p id="wg-news-err" class="fine" style="display:none;color:#ffb4b4;">Something went wrong. Try again in a minute.</p>
 
@@ -105,46 +87,36 @@
       <footer>© <span id="y"></span> WalletGlass</footer>
     </section>
   </main>
+
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
     document.getElementById('openApp').href = '#'; // change to https://app.walletglass.io later
   </script>
-<script>
-(function () {
-  const form = document.querySelector('form#wg-news');
-  const ok = document.getElementById('wg-news-ok');
-  const err = document.getElementById('wg-news-err');
-  if (!form) return; // safety
+  <script>
+    (function () {
+      const form = document.querySelector('form#wg-news');
+      const ok = document.getElementById('wg-news-ok');
+      const err = document.getElementById('wg-news-err');
+      if (!form) return;
+      const btn = form.querySelector('button[type="submit"]');
 
-  const btn = form.querySelector('button[type="submit"]');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();             // <-- stops the default redirect
-    ok.style.display = 'none';
-    err.style.display = 'none';
-    btn.disabled = true; btn.textContent = 'Sending…';
-
-    try {
-      const res = await fetch(form.action, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },  // <-- tells Formspree to NOT redirect
-        body: new FormData(form)
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        ok.style.display = 'none';
+        err.style.display = 'none';
+        btn.disabled = true; btn.textContent = 'Sending…';
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' },
+            body: new FormData(form)
+          });
+          if (res.ok) { form.reset(); ok.style.display = 'block'; }
+          else { err.style.display = 'block'; }
+        } catch { err.style.display = 'block'; }
+        finally { btn.disabled = false; btn.textContent = 'Get updates'; }
       });
-      if (res.ok) {
-        form.reset();
-        ok.style.display = 'block';
-      } else {
-        err.style.display = 'block';
-      }
-    } catch {
-      err.style.display = 'block';
-    } finally {
-      btn.disabled = false; btn.textContent = 'Get updates';
-    }
-  });
-})();
-</script>
-
-
+    })();
+  </script>
 </body>
 </html>
